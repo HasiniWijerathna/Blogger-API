@@ -3,6 +3,8 @@ const tokenFactory = require('../services/tokenFactory');
 
 const models = require('../models/index');
 
+const expirationIgnorePaths = ['/auth/token'];
+
 /**
  * The middleware to authorize requests that should be protected by a login
  * @param  {object}   req  The request object provided by the Express router
@@ -15,7 +17,8 @@ const userIdentifier = (req, res, next) => {
     const authorizationHeader = req.header('Authorization') || '';
     const token = authorizationHeader
       .match(/[A-Za-z0-9\-_~\+\/]*\.[A-Za-z0-9\-_~\+\/]*\.[A-Za-z0-9\-_~\+\/]*/)[0];
-    const decoded = tokenFactory.verifyAuthToken(token);
+      const ignoreExpiration = expirationIgnorePaths.indexOf(req.originalUrl) !== -1;
+      const decoded = tokenFactory.verifyAuthToken(token, ignoreExpiration);
 
     models
       .User

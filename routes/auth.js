@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router(); // eslint-disable-line
 
 const models = require('../models/index');
-
+const config = require('../config');
+const authRequired = require('../middlewares/authRequired');
 const tokenFactory = require('../services/tokenFactory');
 const errorFactory = require('../services/errorFactory');
 const userService = require('../services/userService');
@@ -29,25 +30,40 @@ const findUser = (username, password) => {
 };
 
 /**
+ * Creates the response object
+ * @param  {object} user User object
+ * @return {object}      Response object
+ */
+const prepareResponse = (user) => {
+  const nowTime = Date.now();
+  const expiration = nowTime + (config.authToken.expiresIn * 1000); // Add expiration time and convert to milliseconds
+  const tokenData = {
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    },
+  };
+  return {
+    expiration,
+    user,
+    token: tokenFactory.issueAuthToken(tokenData),
+  };
+};
+/**
+ * Refresh the token
+ */
+router.get('/token', authRequired, (req, res) => {
+    res.send(prepareResponse(req.user));
+});
+/**
  * Registering the '/login' route
  */
 router.post('/login', (req, res, next) => {
   findUser(req.body.username, req.body.password)
     .then((user) => {
       if (user) {
-        const tokenData = {
-          user: {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-          },
-        };
-
-        res.send({
-          message: `Welcome ${user.name}`,
-          user,
-          token: tokenFactory.issueAuthToken(tokenData),
-        });
+        res.send(prepareResponse(user));
       } else {
         throw errorFactory.unauthorized(req);
       }
@@ -96,8 +112,10 @@ router.post('/register', (req, res, next) => {
             email: createdUser.email,
           },
         };
-
+        const nowTime = Date.now();
+        const expiration = nowTime + (config.authToken.expiresIn * 1000);
         res.json({
+          expiration,
           user: createdUser,
           message: `Welcome ${createdUser.name}`,
           token: tokenFactory.issueAuthToken(tokenData),

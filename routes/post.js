@@ -21,7 +21,9 @@ router.get('/', (req, res) => {
     ],
   })
     .then((allPosts) => {
-    res.json(allPosts);
+      res.json({
+    results: allPosts,
+    });
   });
 });
 
@@ -52,7 +54,7 @@ router.get('/:postId', userIdentifier, (req, res, next) => {
   // Return post with ID 'postId'
   models
   .Posts
-  .findAll({
+  .find({
      where: {
        id: req.params.postId,
      },

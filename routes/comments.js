@@ -15,10 +15,12 @@ router.get('/', (req, res) => {
   models
   .Comments
   .findAll({
-    attributes: ['id', 'comment'],
+    attributes: ['id', 'comment', 'PostId', 'UserId'],
   })
     .then((allComments) => {
-    res.json(allComments);
+    res.json({
+      results: allComments,
+    });
   });
 });
 
@@ -99,7 +101,10 @@ router.delete('/:commentId', userIdentifier, authRequired, modelDeleteAuthorizer
     },
   })
   .then((deletedComment) => {
-    res.json(deletedComment);
+    // res.json(deletedComment);
+    res.json({
+      results: true,
+    });
   });
 });
 

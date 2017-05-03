@@ -2,8 +2,9 @@
   "environment": "production",
   "passwordKey": "f451ea61-8d11-454e-a85f-71d16f542d86",
   "authToken": {
-    "expiresIn": "1d",
+    "expiresIn": 86400,
     "privateKey": "06eb28f0-573d-4540-ae49-1ff60306cef9",
     "algorithm": "RS256"
-  }
+  },
+    "bucket": "hasini-bloggger-dev",
 }

@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "Buffer": false
+  },
   "env": {
     "browser": false,
     "node": true,
@@ -8,6 +11,7 @@
   "rules": {
     "linebreak-style": [0],
     "max-len": ["error", 120, 4],
-    "prefer-const": "error"
+    "prefer-const": "error",
+    "no-undef": "error"
   }
 }

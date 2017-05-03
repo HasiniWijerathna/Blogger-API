@@ -1,8 +1,9 @@
 {
   "env": "development",
+  "bucket": "hasini-bloggger-dev",
   "passwordKey": "7047d4f4-114e-4f71-a5e5-bb6e5f418eb7",
   "authToken": {
-    "expiresIn": "1d",
+    "expiresIn": 86400,
     "privateKey": "a20c59f3-c2e1-40cc-87dc-feb9cf435c41",
     "algorithm": "RS256"
   }
